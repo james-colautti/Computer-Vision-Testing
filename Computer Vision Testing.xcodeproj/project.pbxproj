@@ -14,6 +14,9 @@
 		1A7123C41AA6861E005DA907 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A7123C31AA6861E005DA907 /* Images.xcassets */; };
 		1A7123C71AA6861E005DA907 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A7123C51AA6861E005DA907 /* LaunchScreen.xib */; };
 		1A7123D31AA6861E005DA907 /* Computer_Vision_TestingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7123D21AA6861E005DA907 /* Computer_Vision_TestingTests.m */; };
+		1AC2A67F1AA6E43F00930D28 /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AC2A67E1AA6E43F00930D28 /* placeholder.png */; };
+		1AC2A6831AA7559200930D28 /* steampunk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1AC2A6821AA7559200930D28 /* steampunk.jpg */; };
+		1AC2A6851AA7607E00930D28 /* dp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AC2A6841AA7607E00930D28 /* dp.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		1A7123CC1AA6861E005DA907 /* Computer Vision TestingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Computer Vision TestingTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A7123D11AA6861E005DA907 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A7123D21AA6861E005DA907 /* Computer_Vision_TestingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Computer_Vision_TestingTests.m; sourceTree = "<group>"; };
+		1AC2A67E1AA6E43F00930D28 /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
+		1AC2A6821AA7559200930D28 /* steampunk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = steampunk.jpg; sourceTree = "<group>"; };
+		1AC2A6841AA7607E00930D28 /* dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dp.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +94,9 @@
 				1A7123C01AA6861E005DA907 /* Main.storyboard */,
 				1A7123C31AA6861E005DA907 /* Images.xcassets */,
 				1A7123C51AA6861E005DA907 /* LaunchScreen.xib */,
+				1AC2A67E1AA6E43F00930D28 /* placeholder.png */,
+				1AC2A6821AA7559200930D28 /* steampunk.jpg */,
+				1AC2A6841AA7607E00930D28 /* dp.png */,
 				1A7123B61AA6861E005DA907 /* Supporting Files */,
 			);
 			path = "Computer Vision Testing";
@@ -200,8 +209,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A7123C21AA6861E005DA907 /* Main.storyboard in Resources */,
+				1AC2A6851AA7607E00930D28 /* dp.png in Resources */,
+				1AC2A67F1AA6E43F00930D28 /* placeholder.png in Resources */,
 				1A7123C71AA6861E005DA907 /* LaunchScreen.xib in Resources */,
 				1A7123C41AA6861E005DA907 /* Images.xcassets in Resources */,
+				1AC2A6831AA7559200930D28 /* steampunk.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,7 +355,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = "Computer Vision Testing/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -353,7 +367,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = "Computer Vision Testing/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -412,6 +428,7 @@
 				1A7123D81AA6861E005DA907 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1A7123D91AA6861E005DA907 /* Build configuration list for PBXNativeTarget "Computer Vision TestingTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +437,7 @@
 				1A7123DB1AA6861E005DA907 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

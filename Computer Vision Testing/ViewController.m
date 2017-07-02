@@ -19,6 +19,10 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (nonatomic, strong) NSMutableString *mCode;
 
+@property (nonatomic, readwrite) CGSize outputViewScaleStartSize;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *outputViewLayoutConstraintWidthMultiplier;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *outputViewLayoutConstrainHeightMultiplier;
+
 @property BOOL mAnimating;
 
 @end
@@ -72,36 +76,59 @@
     }
 }
 
+#pragma mark - GUI Methods
+- (IBAction)didPinchOutputView:(UIPinchGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateBegan)
+    {
+        self.outputViewScaleStartSize = self.outputView.frame.size;
+    }
+    else if (sender.state == UIGestureRecognizerStateChanged)
+    {
+        NSLog(@"%f", self.outputViewScaleStartSize.width);
+        self.outputViewLayoutConstraintWidthMultiplier.constant = self.outputViewScaleStartSize.width * sender.scale - (self.contentView.frame.size.width / 2);
+        self.outputViewLayoutConstrainHeightMultiplier.constant = self.outputViewScaleStartSize.height * sender.scale - (self.contentView.frame.size.height / 2);
+        
+        if (self.outputViewLayoutConstraintWidthMultiplier.constant > self.contentView.frame.size.width / 2)
+        {
+            self.outputViewLayoutConstraintWidthMultiplier.constant = self.contentView.frame.size.width / 2;
+            self.outputViewLayoutConstrainHeightMultiplier.constant = self.contentView.frame.size.height / 2;
+        }
+        else if (self.outputViewLayoutConstraintWidthMultiplier.constant < 0)
+        {
+            self.outputViewLayoutConstraintWidthMultiplier.constant = 0;
+            self.outputViewLayoutConstrainHeightMultiplier.constant = 0;
+        }
+    }
+}
+
+- (IBAction)didTapOutputView:(UITapGestureRecognizer *)sender
+{
+    if (self.outputView.image)
+    {
+        UIImageWriteToSavedPhotosAlbum(self.outputView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo;
+{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Image Saved"
+                                                                   message:@"The image has been saved to Photos."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {}];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 #pragma mark - Capture Methods
 - (void)startCapturingImages
 {
-    [self captureImageWithCompletion:^(BOOL success, UIImage *image) {
-//        [NSTimer scheduledTimerWithTimeInterval:0.2F target:self selector:@selector(startCapturingImages) userInfo:nil repeats:NO];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01F * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self startCapturingImages];
-        });
+    [self captureImageWithCompletion:^(BOOL success, UIImage *image)
+    {
         if (success)
         {
-//            CIContext *context = [CIContext contextWithOptions:nil];
-//            CIImage *input = [[CIImage alloc] initWithCGImage:[[self scaleAndRotateImage:image] CGImage] options:nil];
-//            CIFilter *filter = [CIFilter filterWithName:@"CIEdges"];
-//            [filter setValue:input forKey:kCIInputImageKey];
-//            [filter setValue:@0.8f forKey:kCIInputIntensityKey];
-//            CIImage *result = [filter valueForKey:kCIOutputImageKey];
-//            CGRect extent = [result extent];
-//            CGImageRef cgImage = [context createCGImage:result fromRect:extent];
-//            UIImage *final = [UIImage imageWithCIImage:result];
-//            [self.outputView setImage:final];
-            
-//            [self.outputView setImage:image];
-            UIImage *scaledImage = [self scaleImage:image toSize:CGSizeMake(image.size.width / 5, image.size.height / 5)];
-            UIImage *input = [self scaleAndRotateImage:scaledImage];
-            NSMutableArray *imageRGBArray = [self getRGBAsFromImage:input];
-            NSMutableArray *imageGrayScaleArray = [self getGrayScaleFromRGBs:imageRGBArray];
-            NSMutableArray *imageSmoothArray = [self smoothFilterRGBs:imageGrayScaleArray size:1];
-            NSMutableArray *imageEdgeArray = [self edgeFilterRGBs:imageSmoothArray threshold:0.1F];
-            UIImage *edgeImage = [self getImageFromRGBs:imageEdgeArray];
-            [self.outputView setImage:edgeImage];
+            [self parseImage:image];
         }
     }];
     
@@ -141,20 +168,36 @@
     }];
 }
 
+- (void)parseImage:(UIImage *)image
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.jamescolautti.Computer-Vision-Testing", NULL);
+    dispatch_async(queue, ^{
+        UIImage *scaledImage = [self scaleImage:image toSize:CGSizeMake(image.size.width / 5, image.size.height / 5)];
+        UIImage *input = [self scaleAndRotateImage:scaledImage];
+        NSMutableArray *imageRGBArray = [self getRGBAsFromImage:input];
+        NSMutableArray *imageGrayScaleArray = [self getGrayScaleFromRGBs:imageRGBArray];
+        NSMutableArray *imageSmoothArray = [self smoothFilterRGBs:imageGrayScaleArray size:1];
+        NSMutableArray *imageEdgeArray = [self edgeFilterRGBs:imageSmoothArray threshold:0.10F];
+        UIImage *edgeImage = [self getImageFromRGBs:imageEdgeArray];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.outputView setImage:edgeImage];
+            if (self.captureSession)
+            {
+                [self startCapturingImages];
+            }
+        });
+    });
+}
+
 - (void)parseTestImage
 {
-    UIImage *image = [UIImage imageNamed:@"steampunk.jpg"];
+    UIImage *image = [UIImage imageNamed:@"testimage.png"];
     [self.placeholderView setImage:image];
-    NSMutableArray *imageRGBArray = [self getRGBAsFromImage:image];
-    NSMutableArray *imageGrayScaleArray = [self getGrayScaleFromRGBs:imageRGBArray];
-    NSMutableArray *imageSmoothArray = [self smoothFilterRGBs:imageGrayScaleArray size:2];
-    NSMutableArray *imageEdgeArray = [self edgeFilterRGBs:imageSmoothArray threshold:0.1F];
-    UIImage *edgeImage = [self getImageFromRGBs:imageEdgeArray];
-    [self.outputView setImage:edgeImage];
+    [self parseImage:image];
 }
 
 - (UIImage *)scaleAndRotateImage:(UIImage *)image {
-    int kMaxResolution = 640; // Or whatever
+    int kMaxResolution = 640;
     
     CGImageRef imgRef = image.CGImage;
     
@@ -325,7 +368,6 @@
         for (UIColor *color in row)
         {
             CGFloat red, green, blue, white, alpha;
-//            [color getWhite:&white alpha:&alpha];
             [color getRed:&red green:&green blue:&blue alpha:&alpha];
             white = (red + green + blue) / 3.0F;
             UIColor *grayScaleColor = [UIColor colorWithWhite:white alpha:alpha];
@@ -344,20 +386,10 @@
     CGFloat height = [rgbs count];
     for (int i = 0; i < height; i++)
     {
-//        NSMutableArray *row[3];
-//        if (i > 0)
-//        {
-//            row[0] = [rgbs objectAtIndex:i - 1];
-//        }
-//        row[1] = [rgbs objectAtIndex:i];
-//        if (i < rgbs.count - 1)
-//        {
-//            row[2] = [rgbs objectAtIndex:i + 1];
-//        }
         NSMutableArray *edgeRowArray = [NSMutableArray arrayWithCapacity:width];
         for (int j = 0; j < width; j++)
         {
-            CGFloat filterValue;
+            CGFloat filterValue = 0.0F;
             CGFloat white, alpha;
             for (int ii = -size; ii <= size; ii++)
             {
@@ -372,61 +404,6 @@
                     }
                 }
             }
-//            if (j > 0)
-//            {
-//                UIColor *color = [row2 objectAtIndex:j - 1];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (j < row2.count - 1)
-//            {
-//                UIColor *color = [row2 objectAtIndex:j + 1];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (i > 0)
-//            {
-//                UIColor *color = [row1 objectAtIndex:j];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (i < rgbs.count - 1)
-//            {
-//                UIColor *color = [row3 objectAtIndex:j];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (j > 0 && i > 0)
-//            {
-//                UIColor *color = [row1 objectAtIndex:j - 1];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (j > 0 && i < rgbs.count - 1)
-//            {
-//                UIColor *color = [row3 objectAtIndex:j - 1];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (j < row2.count - 1 && i > 0)
-//            {
-//                UIColor *color = [row1 objectAtIndex:j + 1];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
-//            
-//            if (j < row2.count - 1 && i < rgbs.count - 1)
-//            {
-//                UIColor *color = [row3 objectAtIndex:j + 1];
-//                [color getWhite:&white alpha:&alpha];
-//                filterValue += white;
-//            }
             
             filterValue = filterValue / ((size * 2 + 1) * (size * 2 + 1));
             
@@ -458,7 +435,7 @@
         NSMutableArray *edgeRowArray = [NSMutableArray arrayWithCapacity:row2.count];
         for (int j = 0; j < row2.count; j++)
         {
-            CGFloat filterValue, filterValueH, filterValueV;
+            CGFloat filterValue = 0.0F, filterValueH = 0.0F, filterValueV = 0.0F;
             CGFloat white, alpha;
             if (j > 0)
             {
@@ -582,7 +559,6 @@
 {
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:count];
     
-    // First get the image into your data buffer
     CGImageRef imageRef = [image CGImage];
     NSUInteger width = CGImageGetWidth(imageRef);
     NSUInteger height = CGImageGetHeight(imageRef);
@@ -599,7 +575,6 @@
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
     CGContextRelease(context);
     
-    // Now your rawData contains the image data in the RGBA8888 pixel format.
     NSUInteger byteIndex = (bytesPerRow * y) + x * bytesPerPixel;
     for (int i = 0 ; i < count ; ++i)
     {

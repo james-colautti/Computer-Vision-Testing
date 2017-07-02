@@ -1,9 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -15,17 +19,17 @@
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BpC-Zw-KfD">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="21g-Fg-yXj">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="580"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="21g-Fg-yXj" secondAttribute="trailing" id="Hdb-nk-ywV"/>
                                     <constraint firstItem="21g-Fg-yXj" firstAttribute="top" secondItem="BpC-Zw-KfD" secondAttribute="top" id="Me9-LP-4le"/>
@@ -34,23 +38,29 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a1n-p1-l4O">
-                                <rect key="frame" x="300" y="310" width="300" height="290"/>
+                                <rect key="frame" x="187.5" y="343.5" width="187.5" height="323.5"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="afC-al-S7c">
-                                        <rect key="frame" x="0.0" y="0.0" width="300" height="290"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="323.5"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <gestureRecognizers/>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="0.5" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="afC-al-S7c" firstAttribute="top" secondItem="a1n-p1-l4O" secondAttribute="top" id="CKv-P1-IaR"/>
                                     <constraint firstAttribute="bottom" secondItem="afC-al-S7c" secondAttribute="bottom" id="azQ-NQ-d6v"/>
                                     <constraint firstItem="afC-al-S7c" firstAttribute="leading" secondItem="a1n-p1-l4O" secondAttribute="leading" id="pZg-Bo-UdF"/>
                                     <constraint firstAttribute="trailing" secondItem="afC-al-S7c" secondAttribute="trailing" id="vjN-R8-LCy"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="1mr-C3-yUH" appends="YES" id="JCP-qP-hhD"/>
+                                    <outletCollection property="gestureRecognizers" destination="23X-Oa-8ba" appends="YES" id="oRB-sf-7pm"/>
+                                </connections>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="BpC-Zw-KfD" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="DgL-bl-a8v"/>
                             <constraint firstAttribute="trailing" secondItem="a1n-p1-l4O" secondAttribute="trailing" id="Fyi-Mf-IxS"/>
@@ -65,10 +75,22 @@
                     <connections>
                         <outlet property="contentView" destination="BpC-Zw-KfD" id="jN1-Z2-Zmy"/>
                         <outlet property="outputView" destination="afC-al-S7c" id="MKX-Sp-nLq"/>
+                        <outlet property="outputViewLayoutConstrainHeightMultiplier" destination="igk-2Y-MCg" id="Wpa-rT-HGL"/>
+                        <outlet property="outputViewLayoutConstraintWidthMultiplier" destination="bNE-qZ-ADO" id="DaI-RJ-l4D"/>
                         <outlet property="placeholderView" destination="21g-Fg-yXj" id="odJ-ie-hMo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="1mr-C3-yUH">
+                    <connections>
+                        <action selector="didPinchOutputView:" destination="vXZ-lx-hvc" id="m8X-hS-DcZ"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <tapGestureRecognizer id="23X-Oa-8ba">
+                    <connections>
+                        <action selector="didTapOutputView:" destination="vXZ-lx-hvc" id="Cu8-Du-Ler"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
         </scene>
     </scenes>
